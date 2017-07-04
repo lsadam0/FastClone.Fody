@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostWeaving.Tests", "PostWe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildIntermediate", "BuildIntermediate\BuildIntermediate.csproj", "{EADC8057-2560-43B6-8282-200693A4BF8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget", "Nuget\Nuget.csproj", "{CD0A1048-1D20-40E1-B52A-458AF3B97AA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EADC8057-2560-43B6-8282-200693A4BF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EADC8057-2560-43B6-8282-200693A4BF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EADC8057-2560-43B6-8282-200693A4BF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD0A1048-1D20-40E1-B52A-458AF3B97AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD0A1048-1D20-40E1-B52A-458AF3B97AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD0A1048-1D20-40E1-B52A-458AF3B97AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD0A1048-1D20-40E1-B52A-458AF3B97AA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
