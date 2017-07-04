@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastClone.Fody", "FastClone.Fody\FastClone.Fody.csproj", "{1B5751B3-764A-4934-8E8A-F7ED735EEC1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyToProcess", "AssemblyToProcess\AssemblyToProcess.csproj", "{6A40B99D-F0FA-415D-8A4E-4637ABAA9285}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastClone.Tests", "FastClone.Tests\FastClone.Tests.csproj", "{0637CF87-69EC-465C-A1B3-D8E33CB9B77F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B5751B3-764A-4934-8E8A-F7ED735EEC1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B5751B3-764A-4934-8E8A-F7ED735EEC1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B5751B3-764A-4934-8E8A-F7ED735EEC1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B5751B3-764A-4934-8E8A-F7ED735EEC1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A40B99D-F0FA-415D-8A4E-4637ABAA9285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A40B99D-F0FA-415D-8A4E-4637ABAA9285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A40B99D-F0FA-415D-8A4E-4637ABAA9285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A40B99D-F0FA-415D-8A4E-4637ABAA9285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0637CF87-69EC-465C-A1B3-D8E33CB9B77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0637CF87-69EC-465C-A1B3-D8E33CB9B77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0637CF87-69EC-465C-A1B3-D8E33CB9B77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0637CF87-69EC-465C-A1B3-D8E33CB9B77F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
