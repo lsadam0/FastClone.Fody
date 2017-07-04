@@ -4,6 +4,8 @@ namespace AssemblyToProcess
 {
     public class BasicTest : IFastClone<BasicTest>
     {
+        public int ValueE;
+
         public BasicTest(int valueA, int valueB)
         {
             ValueA = valueA;
@@ -14,16 +16,6 @@ namespace AssemblyToProcess
         {
         }
 
-        public static BasicTest BuildTest()
-        {
-            return new BasicTest()
-            {
-                ValueE = 10,
-                ValueD = 9,
-                ValueB = 7,
-                ValueA = 6,
-            };
-        }
         public int ValueA { get; set; }
 
         public int ValueB { get; set; }
@@ -31,23 +23,33 @@ namespace AssemblyToProcess
         // public int ValueC { get; }
 
         public int ValueD { get; private set; }
-
-        public int ValueE;
-
         
-
-      //  public BasicTest FastShallowClone() => CloneMethod(this);
+        
+        public static BasicTest BuildTest()
+        {
+            return new BasicTest
+            {
+                ValueE = 10,
+                ValueD = 9,
+                ValueB = 7,
+                ValueA = 6
+            };
+        }
+        
+        public static BasicTest Testng(BasicTest source)
+        {
+            return new BasicTest()
+            {
+                ValueE = source.ValueE,
+                ValueA = source.ValueA
+            };
+        }
 
         public static void Testing()
         {
-            
         }
 
-        /*
-        public static BasicTest CloneMethod(BasicTest source)
-        { return null; }
-        public BasicTest FastClone() => CloneMethod(this); */
-        public BasicTest FastCloneZ()
+        public BasicTest FastClone()
         {
             throw new NotImplementedException();
         }

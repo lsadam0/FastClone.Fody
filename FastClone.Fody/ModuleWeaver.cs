@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -10,151 +8,133 @@ namespace FastClone.Fody
 {
     public class ModuleWeaver
     {
-        public Action<string> LogInfo { get; set; }
+        private const string FastCloneInterfaceName = @"IFastClone`1";
+        private const string StaticCloneMethodName = @"CloneMethod";
+        private const string InstanceCloneMethodName = @"FastClone";
+        private const string SourceParamName = @"Source";
 
-        // An instance of Mono.Cecil.ModuleDefinition for processing
-        public ModuleDefinition ModuleDefinition { get; set; }
-
-        // TypeSystem typeSystem;
-
-        // Init logging delegates to make testing easier
         public ModuleWeaver()
         {
             LogInfo = m => { };
         }
 
-        private MethodDefinition GetCtor(TypeDefinition def)
-        {
-            var ctor = def.Methods.FirstOrDefault(x => x.IsConstructor && !x.HasParameters);
-            { }
-            return ctor;
-        }
-        private void BuildInstanceMethod(TypeDefinition def, MethodDefinition mDef)
-        {
-            /*    IL_0000: ldarg.0      // this
-    IL_0001: call         class AssemblyToProcess.BasicTest AssemblyToProcess.BasicTest::CloneMethod(class AssemblyToProcess.BasicTest)
-    IL_0006: ret          */
+        public Action<string> LogInfo { get; set; }
 
+        public ModuleDefinition ModuleDefinition { get; set; }
+
+        private static void BuildInstanceMethod(TypeDefinition def, MethodDefinition mDef)
+        {
+            var method = def.Methods.FirstOrDefault(x => x.Name == InstanceCloneMethodName);
+            /*
             var method = new MethodDefinition(
-                "FastClone",
+                InstanceCloneMethodName,
                 MethodAttributes.Public,
-                def);
+                def);*/
 
             var proc = method.Body.GetILProcessor();
-            proc.Emit(OpCodes.Ldarg_0); // this
+            var existing = proc.Body.Instructions.ToList();
+            // proc.Body.Instructions.Clear();
+
+            foreach (var pending in existing)
+                proc.Remove(pending);
+
+            proc.Emit(OpCodes.Ldarg_0);
             proc.Emit(OpCodes.Call, mDef);
             proc.Emit(OpCodes.Ret);
 
-            def.Methods.Add(method);
+            // def.Methods.Add(method);
         }
-        private void BuildStaticCloneMethod(TypeDefinition def)
+
+        private MethodDefinition BuildStaticCloneMethod(TypeDefinition target)
         {
             var method = new MethodDefinition(
-                "CloneMethod",
+                StaticCloneMethodName,
                 MethodAttributes.Public | MethodAttributes.Static,
-                def);
+                target);
 
-            if (method.HasBody)
-            {
-                { }
-                
-            }
-            method.Parameters.Add(new ParameterDefinition("Source", ParameterAttributes.None, def));
-            var ctor = GetCtor(def);
-            // var res = new VariableDefinition(def);
+            method.Parameters.Add(new ParameterDefinition(
+                SourceParamName,
+                ParameterAttributes.None,
+                target));
+
+            var constructor = TypeInspector.GetParameterlessConstructor(target);
+
             var processor = method.Body.GetILProcessor();
-            
-            //processor.Create(OpCodes.Newobj, ctor);
-            processor.Emit(OpCodes.Newobj, ctor);
-            SetFields(processor, def);
-            processor.Emit(OpCodes.Ret);
-    
-            def.Methods.Add(method);
 
-            BuildInstanceMethod(def, method);
+            processor.Emit(OpCodes.Newobj, constructor); // invoke constructor
+            SetFields(processor, target);
+            // SetProperties(processor, target); // Set Fields
+            processor.Emit(OpCodes.Ret); // Return
+
+            target.Methods.Add(method);
+
+            return method;
         }
-  
-           private void SetFields(ILProcessor processor, TypeDefinition def)
-           {
-    
+
+        private static void SetFields(ILProcessor processor, TypeDefinition def)
+        {
+            foreach (var field in def.Fields)
+            {
+                processor.Emit(OpCodes.Dup);
+                processor.Emit(OpCodes.Ldarg_0);
+                processor.Emit(OpCodes.Ldfld, field);
+                processor.Emit(OpCodes.Stfld, field);
+
+
+                /*    IL_0005: dup          
+    IL_0006: ldarg.0      // source
+    IL_0007: ldfld        int32 AssemblyToProcess.BasicTest::ValueE
+    IL_000c: stfld        int32 AssemblyToProcess.BasicTest::ValueE*/
+
+               // processor.Emit(OpCodes.g, prop.GetMethod);
+               //  processor.Emit(OpCodes.Callvirt, prop.SetMethod);
+
+                /*                generator.Emit(OpCodes.Ldloc_0);
+                generator.Emit(OpCodes.Ldarg_0);
+                generator.Emit(OpCodes.Ldfld, field);
+                generator.Emit(OpCodes.Stfld, field);*/
+            }
+        }
+        /*
+        private static void SetProperties(ILProcessor processor, TypeDefinition def)
+        {
             foreach (var prop in def.Properties)
             {
                 processor.Emit(OpCodes.Dup);
                 processor.Emit(OpCodes.Ldarg_0);
                 processor.Emit(OpCodes.Callvirt, prop.GetMethod);
-                processor.Emit(OpCodes.Callvirt, prop.SetMethod);                
+                processor.Emit(OpCodes.Callvirt, prop.SetMethod);
             }
+        }*/
 
-        }
-
-        private const string FastCloneName = @"IFastClone`1";
-        private bool ImplementsIFastClone(TypeDefinition def)
+        private static bool ImplementsIFastClone(TypeDefinition def)
         {
-            return def.Interfaces.FirstOrDefault(x => x.InterfaceType.Name == FastCloneName) != null;
-        }
-     
-        private void FindCloneables()
-        {
-            var iface = ModuleDefinition.Types.FirstOrDefault(x => x.Name == "IFastClone`1");
-
-            if (iface == null)
-                return;
-
-            foreach (var m in ModuleDefinition.Types.Where(ImplementsIFastClone))
-            {
-                InjectMethod(m);
-                BuildStaticCloneMethod(m);
-            }
+            return def
+                       .Interfaces
+                       .FirstOrDefault(x => x.InterfaceType.Name == FastCloneInterfaceName) != null;
         }
 
-        
+
         public void Execute()
         {
-            FindCloneables();
-            /*
-            foreach (var m in ModuleDefinition.Types.Where(x => x.IsPublic && x.IsClass))
+            Trace.WriteLine("Applying FastClone...");
+            foreach (var definition in ModuleDefinition.Types.Where(ImplementsIFastClone))
             {
-                InjectMethod(m);
-            }*/
-        }
+                if (!TypeInspector.HasParameterlessConstructor(definition))
+                {
+                    Trace.WriteLine($"Type {definition.Name} lacks a parameterless constructor, skipping");
+                    continue;
+                }
+                Trace.WriteLine($"Extending {definition.Name}");
 
+                // Add Static Clone
+                var staticMethod = BuildStaticCloneMethod(definition);
 
-        private void MakeStaticMethod(TypeDefinition target)
-        {
-            var del = new FieldDefinition(
-                "CloneMethod",
-                FieldAttributes.Public | FieldAttributes.Static,
-                target);
-
-            
-            // var mType = typeof(Func<,>).MakeGenericType(target.)
-        }
-        private void InjectMethod(TypeDefinition target)
-        {
-            MakeStaticMethod(target);
-            var method = new MethodDefinition(
-                "HelloWorld",
-                MethodAttributes.Public,
-                ModuleDefinition.TypeSystem.String);
-
-            var processor = method.Body.GetILProcessor();
-            processor.Emit(OpCodes.Ldstr, "Hello World");
-            processor.Emit(OpCodes.Ret);
-
-            target.Methods.Add(method);
-
-            
-
-            /*  .method public hidebysig instance string 
-    HelloWorld() cil managed 
-  {
-    .maxstack 8
-
-    // [19 39 - 19 52]
-    IL_0000: ldstr        "Hello World"
-    IL_0005: ret          
-
-  } // end of method BasicTest::HelloWorld*/
+                // Add Instance Method
+                BuildInstanceMethod(definition, staticMethod);
+            }
+            Trace.WriteLine("Done");
         }
     }
 }
+ 

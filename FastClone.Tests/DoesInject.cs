@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-
 using FastClone.Fody;
 using Mono.Cecil;
 using NUnit.Framework;
@@ -15,6 +14,7 @@ namespace FastClone.Tests
         private string _weavedAssemblyPath;
 
         private Assembly _weavedAssembly;
+
         [OneTimeSetUp]
         public void Weave()
         {
@@ -24,7 +24,8 @@ namespace FastClone.Tests
 
             Assert.IsTrue(File.Exists(projectPath));
 
-            _originalAssemblyPath = Path.Combine(Path.GetDirectoryName(projectPath), @"bin\Debug\AssemblyToProcess.dll");
+            _originalAssemblyPath = Path.Combine(Path.GetDirectoryName(projectPath),
+                @"bin\Debug\AssemblyToProcess.dll");
             Assert.IsTrue(File.Exists(_originalAssemblyPath));
             _weavedAssemblyPath = _originalAssemblyPath.Replace(".dll", ".Weaved.dll");
             File.Copy(_originalAssemblyPath, _weavedAssemblyPath, true);
@@ -56,7 +57,7 @@ namespace FastClone.Tests
             return instance;
         }
 
-        
+
         [Test]
         public void DoesInjectStaticClone()
         {
@@ -67,28 +68,8 @@ namespace FastClone.Tests
             var weavedMethod = type.GetMethod("CloneMethod", BindingFlags.Static | BindingFlags.Public);
 
 
-            var resA = method.Invoke(test, new object[] { test });
-            var resB = weavedMethod.Invoke(test, new object[] { test });
-
-        }
-
-        [Test]
-        public void DoesInject_HelloWorld()
-        {
-            Assert.NotNull(_weavedAssembly);
-
-            var type = _weavedAssembly.GetType("AssemblyToProcess.BasicTest");
-            Assert.NotNull(type);
-
-            var instance = (dynamic)Activator.CreateInstance(type);
-            Assert.NotNull(instance);
-
-            var method = type.GetMethod("HelloWorld");
-            Assert.NotNull(method);
-
-            var res = (string)method.Invoke(instance, null);
-            Assert.AreEqual("Hello World", res);
-
+            var resA = method.Invoke(test, new object[] {test});
+            var resB = weavedMethod.Invoke(test, new object[] {test});
         }
     }
 }
