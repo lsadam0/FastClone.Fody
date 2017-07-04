@@ -117,15 +117,15 @@ namespace FastClone.Fody
 
         public void Execute()
         {
-            Trace.WriteLine("Applying FastClone...");
+            LogInfo("Applying FastClone...");
             foreach (var definition in ModuleDefinition.Types.Where(ImplementsIFastClone))
             {
                 if (!TypeInspector.HasParameterlessConstructor(definition))
                 {
-                    Trace.WriteLine($"Type {definition.Name} lacks a parameterless constructor, skipping");
+                    LogInfo($"Type {definition.Name} lacks a parameterless constructor, skipping");
                     continue;
                 }
-                Trace.WriteLine($"Extending {definition.Name}");
+                LogInfo($"Extending {definition.Name}");
 
                 // Add Static Clone
                 var staticMethod = BuildStaticCloneMethod(definition);
@@ -133,7 +133,7 @@ namespace FastClone.Fody
                 // Add Instance Method
                 BuildInstanceMethod(definition, staticMethod);
             }
-            Trace.WriteLine("Done");
+            LogInfo("Done");
         }
     }
 }
