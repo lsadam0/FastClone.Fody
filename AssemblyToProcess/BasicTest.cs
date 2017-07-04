@@ -20,11 +20,13 @@ namespace AssemblyToProcess
 
         public int ValueB { get; set; }
 
-        // public int ValueC { get; }
-
         public int ValueD { get; private set; }
-        
-        
+
+        public BasicTest FastClone()
+        {
+            throw new NotImplementedException();
+        }
+
         public static BasicTest BuildTest()
         {
             return new BasicTest
@@ -34,24 +36,6 @@ namespace AssemblyToProcess
                 ValueB = 7,
                 ValueA = 6
             };
-        }
-        
-        public static BasicTest Testng(BasicTest source)
-        {
-            return new BasicTest()
-            {
-                ValueE = source.ValueE,
-                ValueA = source.ValueA
-            };
-        }
-
-        public static void Testing()
-        {
-        }
-
-        public BasicTest FastClone()
-        {
-            throw new NotImplementedException();
         }
     }
 }

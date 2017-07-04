@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using FastClone.Fody;
 using Mono.Cecil;
 
 namespace BuildIntermediate
 {
-    class Program
+    internal class Program
     {
-        private static string Filename = @"AssemblyToProcess.dll";
-        private static string WeavedFilename = @"AssemblyToProcess.Weaved.dll";
+        private static readonly string Filename = @"AssemblyToProcess.dll";
+        private static readonly string WeavedFilename = @"AssemblyToProcess.Weaved.dll";
+
         private static void Weave()
         {
-
             Trace.WriteLine(Environment.CurrentDirectory);
 
             if (!File.Exists(Filename))
@@ -37,10 +32,11 @@ namespace BuildIntermediate
                 };
 
                 weave.Execute();
-                moduleDef.Write(WeavedFilename);//_weavedAssemblyPath);
+                moduleDef.Write(WeavedFilename); //_weavedAssemblyPath);
             }
         }
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             Weave();
         }

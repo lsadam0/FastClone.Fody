@@ -86,8 +86,8 @@ namespace FastClone.Fody
     IL_0007: ldfld        int32 AssemblyToProcess.BasicTest::ValueE
     IL_000c: stfld        int32 AssemblyToProcess.BasicTest::ValueE*/
 
-               // processor.Emit(OpCodes.g, prop.GetMethod);
-               //  processor.Emit(OpCodes.Callvirt, prop.SetMethod);
+                // processor.Emit(OpCodes.g, prop.GetMethod);
+                //  processor.Emit(OpCodes.Callvirt, prop.SetMethod);
 
                 /*                generator.Emit(OpCodes.Ldloc_0);
                 generator.Emit(OpCodes.Ldarg_0);
@@ -137,4 +137,3 @@ namespace FastClone.Fody
         }
     }
 }
- 
