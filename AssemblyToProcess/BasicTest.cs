@@ -1,7 +1,12 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 
 namespace AssemblyToProcess
 {
+    [Serializable]
     public class BasicTest : IFastClone<BasicTest>, IEquatable<BasicTest>
     {
         public int ValueE;
@@ -133,19 +138,57 @@ namespace AssemblyToProcess
             return !Equals(left, right);
         }
 
+        private FieldInfo[] _fields;
+        private Type _ofThis;
         public BasicTest ReflectionMethod()
         {
-            return null;
+
+            if (_fields == null)
+            {
+
+                _ofThis = this.GetType();
+                _fields = this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            }
+               BasicTest tempMyClass = (BasicTest)Activator.CreateInstance(_ofThis);
+                foreach (var fi in _fields)
+                {
+                  //  if (fi.FieldType.Namespace != _ofThis.Namespace)
+                        fi.SetValue(tempMyClass, fi.GetValue(this));
+                  
+                }
+                return tempMyClass;
+            
         }
 
+        private static byte[] BinSerialize(BasicTest source)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, source);
+                ms.Flush();
+                ms.Position = 0;
+                return ms.ToArray();
+            }
+        }
+
+        private static BasicTest BinDeserialize(byte[] source)
+        {
+            using (var stream = new MemoryStream(source))
+            {
+                var formatter = new BinaryFormatter();
+                stream.Seek(0, SeekOrigin.Begin);
+                return (BasicTest)formatter.Deserialize(stream);
+            }
+        }
         public BasicTest BinarySerializationMethod()
         {
-            return null;
+            return BinDeserialize(BinSerialize(this));
         }
 
         public BasicTest SerializationMethod()
         {
-            return null;
+            return JsonConvert.DeserializeObject<BasicTest>(JsonConvert.SerializeObject(this));
         }
 
         public BasicTest MemberWiseMethod()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using AssemblyToProcess;
 
 namespace Benchmark
@@ -34,7 +35,7 @@ namespace Benchmark
             );
         }
 
-        private static BasicTest FastCloneMEthod(BasicTest e)
+        private static BasicTest FastCloneMethod(BasicTest e)
         {
             return e.FastClone();
         }
@@ -54,23 +55,51 @@ namespace Benchmark
             return e.MemberWiseMethod();
         }
 
+        private static BasicTest ReflectionMethod(BasicTest e)
+        {
+            return e.ReflectionMethod();
+        }
+
+        private static void Initialize(Func<BasicTest, BasicTest> method, string name)
+        {
+            var e = GetTestEntity();
+            var initial = method(e);
+
+            if (initial == null)
+                Console.WriteLine($"{name} - Method returned null");
+
+            if (ReferenceEquals(e, initial))
+                Console.WriteLine($"{name} - Clone not implemented");
+
+            if (!ReferenceEquals(e.M, initial.M))
+                Console.WriteLine($"{name} - Method is not a Shallow clone");
+        }
+
         private static void Main(string[] args)
         {
-            var testData = Get(1000);
-            
-            var two = FastCloneMEthod(testData[0]);
-            var three = MemberwiseMethod(testData[0]);
+            var testData = Get(100);
+
+            Initialize(FastCloneMethod, nameof(FastCloneMethod));
+            Initialize(MemberwiseMethod, nameof(MemberwiseMethod));
+            Initialize(BinarySerializationMethod, nameof(BinarySerializationMethod));
+            Initialize(SerializationMethod, nameof(SerializationMethod));
+            Initialize(ReflectionMethod, nameof(ReflectionMethod));
+
 
             Console.WriteLine($"Begin? {testData.Count}");
             Console.ReadLine();
-            var il = RunTest(testData,FastCloneMEthod);
-            var m = RunTest(testData, MemberwiseMethod);
             
-            var newPass = Audit(testData, FastCloneMEthod);
-            var mPass = Audit(testData, MemberwiseMethod);
-            
-            Console.WriteLine($"{il} New Res Seconds {newPass}");
-            Console.WriteLine($"{m} M Res Seconds {mPass}");
+            Console.WriteLine(RunTest(testData, FastCloneMethod, nameof(FastCloneMethod)));
+            Console.WriteLine(RunTest(testData,MemberwiseMethod, nameof(MemberwiseMethod)));
+            Console.WriteLine(RunTest(testData,BinarySerializationMethod, nameof(BinarySerializationMethod)));
+            Console.WriteLine(RunTest(testData,SerializationMethod, nameof(SerializationMethod)));
+            Console.WriteLine(RunTest(testData,ReflectionMethod, nameof(ReflectionMethod)));
+
+            //  var newPass = Audit(testData, FastCloneMethod);
+            // var mPass = Audit(testData, MemberwiseMethod);
+         
+         //   Console.WriteLine($"{il} New Res Seconds {newPass}");
+           // Console.WriteLine($"{m} M Res Seconds {mPass}");
             Console.ReadLine();
         }
 
@@ -84,7 +113,7 @@ namespace Benchmark
         }
 
 
-        private static double RunTest(List<BasicTest> dataSet, Func<BasicTest, BasicTest> method)
+        private static string RunTest(List<BasicTest> dataSet, Func<BasicTest, BasicTest> method, string name)
         {
             var res = new List<BasicTest>(dataSet.Count);
             var i = 0;
@@ -102,7 +131,7 @@ namespace Benchmark
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine($"{name} - " + e.ToString());
             }
             finally
             {
@@ -113,7 +142,9 @@ namespace Benchmark
                 GC.Collect(2, GCCollectionMode.Forced);
                 GC.WaitForFullGCComplete();
             }
-            return watch.Elapsed.TotalSeconds;
+            // return watch.Elapsed.TotalSeconds;
+
+            return $"{name} - Elapsed {watch.Elapsed.TotalSeconds}";
         }
 
         private static bool Audit(List<BasicTest> dataSet, Func<BasicTest, BasicTest> method)
