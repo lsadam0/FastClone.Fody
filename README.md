@@ -1,11 +1,56 @@
 # FastClone.Fody
 
 
-ToDo
-- Readme writeup
-- Publish
+## This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
 
+https://github.com/username/repository/blob/master/img/octocat.png
+![Icon](https://github.com/lsadam0/FastClone.Fody/blob/master/Icons/clone_package.png)
+Generates ToString method from public properties for class decorated with a `[ToString]` Attribute.
+
+[Introduction to Fody](http://github.com/Fody/Fody/wiki/SampleUsage).
+
+
+## The nuget package
+
+https://nuget.org/packages/ToString.Fody/
+
+    PM> Install-Package ToString.Fody
+
+
+## Your Code
+
+    [ToString]
+    class TestClass
+    {
+        public int Foo { get; set; }
+
+        public double Bar { get; set; }
+        
+        [IgnoreDuringToString]
+        public string Baz { get; set; }
+    }
+
+
+## What gets compiled
+
+    class TestClass
+    {
+        public int Foo { get; set; }
+
+        public double Bar { get; set; }
+        
+        public string Baz { get; set; }
+        
+        public override string ToString()
+        {
+            return string.Format(
+                CultureInfo.InvariantCulture, 
+                "{{T: TestClass, Foo: {0}, Bar: {1}}}",
+                this.Foo,
+                this.Bar);
+        }
+    }
 
 ``` ini
 BenchmarkDotNet=v0.10.8, OS=Windows 10 Redstone 2 (10.0.15063)
