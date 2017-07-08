@@ -1,8 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using Newtonsoft.Json;
 
 namespace AssemblyToProcess
 {
@@ -138,73 +134,30 @@ namespace AssemblyToProcess
             return !Equals(left, right);
         }
 
-        private FieldInfo[] _fields;
-        private Type _ofThis;
-        public BasicTest ReflectionMethod()
-        {
 
-            if (_fields == null)
-            {
-
-                _ofThis = this.GetType();
-                _fields = this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            }
-               BasicTest tempMyClass = (BasicTest)Activator.CreateInstance(_ofThis);
-                foreach (var fi in _fields)
-                {
-                  //  if (fi.FieldType.Namespace != _ofThis.Namespace)
-                        fi.SetValue(tempMyClass, fi.GetValue(this));
-                  
-                }
-                return tempMyClass;
-            
-        }
-
-        private static byte[] BinSerialize(BasicTest source)
+        public static BasicTest BuildTestEntity()
         {
-            using (var ms = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, source);
-                ms.Flush();
-                ms.Position = 0;
-                return ms.ToArray();
-            }
-        }
-
-        private static BasicTest BinDeserialize(byte[] source)
-        {
-            using (var stream = new MemoryStream(source))
-            {
-                var formatter = new BinaryFormatter();
-                stream.Seek(0, SeekOrigin.Begin);
-                return (BasicTest)formatter.Deserialize(stream);
-            }
-        }
-        public BasicTest BinarySerializationMethod()
-        {
-            return BinDeserialize(BinSerialize(this));
-        }
-
-        public BasicTest SerializationMethod()
-        {
-            return JsonConvert.DeserializeObject<BasicTest>(JsonConvert.SerializeObject(this));
-        }
-
-        public BasicTest MemberWiseMethod()
-        {
-            return (BasicTest) MemberwiseClone();
-        }
-
-        public static BasicTest BuildTest()
-        {
-            return new BasicTest
-            {
-                ValueE = 10,
-                ValueD = 9,
-                ValueB = 7,
-                ValueA = 6
-            };
+            return new BasicTest(
+                1,
+                2,
+                3,
+                4,
+                "a",
+                "b",
+                "c",
+                "d",
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                new object(),
+                DateTime.Now,
+                13
+            );
         }
     }
 }

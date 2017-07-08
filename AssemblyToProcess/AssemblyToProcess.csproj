@@ -48,6 +48,13 @@
   <ItemGroup>
     <Compile Include="BasicTest.cs" />
     <Compile Include="IFastClone.cs" />
+    <Compile Include="InternalCtor.cs" />
+    <Compile Include="InternalProperties.cs" />
+    <Compile Include="LacksParameterlessCtor.cs" />
+    <Compile Include="MissingInterface.cs" />
+    <Compile Include="PartialWeave.cs" />
+    <Compile Include="PrivateCtor.cs" />
+    <Compile Include="PrivateField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
