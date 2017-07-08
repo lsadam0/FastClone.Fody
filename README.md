@@ -1,5 +1,4 @@
-# FastClone.Fody
-
+[![NuGet Status](http://img.shields.io/nuget/v/Fody.svg?style=flat)](https://www.nuget.org/packages/FastClone.Fody/)
 
 ## This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
