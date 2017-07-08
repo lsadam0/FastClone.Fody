@@ -3,55 +3,71 @@
 
 ## This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
-
-https://github.com/username/repository/blob/master/img/octocat.png
 ![Icon](https://github.com/lsadam0/FastClone.Fody/blob/master/Icons/clone_package.png)
-Generates ToString method from public properties for class decorated with a `[ToString]` Attribute.
+
+Generate shallow clone methods for objects with the IFastClone<T> interface.
 
 [Introduction to Fody](http://github.com/Fody/Fody/wiki/SampleUsage).
 
-
 ## The nuget package
 
-https://nuget.org/packages/ToString.Fody/
+https://www.nuget.org/packages/FastClone.Fody
 
-    PM> Install-Package ToString.Fody
+    PM> Install-Package FastClone.Fody
 
 
 ## Your Code
 
-    [ToString]
-    class TestClass
+    class SomeClass : IFastClone<SomeClass>
     {
-        public int Foo { get; set; }
+        public int ValueA { get; set; }
 
-        public double Bar { get; set; }
+        public double ValueB { get; set; }
         
-        [IgnoreDuringToString]
-        public string Baz { get; set; }
+        public SomeClass FastClone()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
 ## What gets compiled
 
-    class TestClass
+    class SomeClass : IFastClone<SomeClass>
     {
-        public int Foo { get; set; }
+        public int ValueA { get; set; }
 
-        public double Bar { get; set; }
-        
-        public string Baz { get; set; }
-        
-        public override string ToString()
+        public double ValueB { get; set; }
+
+        public SomeClass FastClone()
         {
-            return string.Format(
-                CultureInfo.InvariantCulture, 
-                "{{T: TestClass, Foo: {0}, Bar: {1}}}",
-                this.Foo,
-                this.Bar);
+            return SomeClass.CloneMethod(this);
+        }
+
+        private static SomeClass CloneMethod(SomeClass source)
+        {
+            return new SomeClass()
+            {
+                ValueA = Source.ValueA,
+                ValueB = Source.ValueB                        
+            }
         }
     }
 
+## Usage
+
+You must define the interface IFastClone<T>, and add it to any class that you wish FastClone to rewrite
+
+    interface IFastClone<T>
+    {
+        T FastClone();
+    }
+
+## Why?
+
+Well, for one, I needed an excuse to play around with Fody :)
+
+That said, this approach to cloning is *slightly* faster than MemberwiseClone (Most of the time).   The benchmark below measures the FastClone vs MemberwiseClone of cloning 100k objects.
 ``` ini
 BenchmarkDotNet=v0.10.8, OS=Windows 10 Redstone 2 (10.0.15063)
 Processor=Intel Core i7-4770HQ CPU 2.20GHz (Haswell), ProcessorCount=4

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8">
     <id>FastClone.Fody</id>
-    <version>$version$</version>
+    <version>0.9.2</version>
     <title>FastClone.Fody</title>
     <authors>Larry Adams</authors>
     <owners>Larry Adams</owners>
@@ -10,11 +10,11 @@
     <licenseUrl>https://github.com/lsadam0/FastClone.Fody/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/lsadam0/FastClone.Fody</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <iconUrl></iconUrl>
-    <description>A Fody add-in for generating native clone methods</description>
+    <iconUrl>https://github.com/lsadam0/FastClone.Fody/blob/master/Icons/clone_package.png?raw=true</iconUrl>
+    <description>A Fody add-in for generating fast shallow clone methods</description>
     <summary />
-    <language>en-AU</language>
-    <tags>ILWeaving, Fody, Cecil, Clone, Shallow</tags>
+    <language>en-US</language>
+    <tags>ILWeaving, Fody, Cecil, Clone, Shallow, Fody</tags>
     <dependencies>
       <dependency id="Fody" version="2.0.0"/>
     </dependencies>

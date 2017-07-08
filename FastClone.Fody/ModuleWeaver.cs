@@ -48,7 +48,7 @@ namespace FastClone.Fody
         {
             var method = new MethodDefinition(
                 StaticCloneMethodName,
-                MethodAttributes.Public | MethodAttributes.Static,
+                MethodAttributes.Private | MethodAttributes.Static,
                 target);
 
             method.Parameters.Add(new ParameterDefinition(
