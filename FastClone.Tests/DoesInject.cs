@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 
@@ -16,7 +15,6 @@ namespace FastClone.Tests
             _weavedAssembly = Weaver.Weave();
         }
 
-        
 
         private dynamic ExecuteFastCloneMethod(Tuple<dynamic, Type> target)
         {
@@ -32,10 +30,11 @@ namespace FastClone.Tests
             var type = _weavedAssembly.GetType(string.Format(TypeManifest.NamespaceMask, className));
             Assert.NotNull(type, $"Unable to find type {className}");
 
-            
-            var buildMethod = type.GetMethod(TypeManifest.BuildTestEntityMethod, BindingFlags.Public | BindingFlags.Static);
+
+            var buildMethod = type.GetMethod(TypeManifest.BuildTestEntityMethod,
+                BindingFlags.Public | BindingFlags.Static);
             Assert.NotNull(buildMethod, $"{className} lacks a BuildTestEntityMethod");
-            var res  = buildMethod.Invoke(null, null);
+            var res = buildMethod.Invoke(null, null);
             Assert.IsNotNull(res, $"Failed to create instance of ${className}");
             return new Tuple<dynamic, Type>(res, type);
         }
@@ -46,7 +45,7 @@ namespace FastClone.Tests
             Assert.NotNull(target);
             Assert.NotNull(target.Item1);
             Assert.NotNull(target.Item2);
-            bool res = false;
+            var res = false;
             try
             {
                 ExecuteFastCloneMethod(target);
@@ -72,10 +71,9 @@ namespace FastClone.Tests
 
         private void ExecEquals(Tuple<dynamic, Type> original, dynamic clone, bool expect)
         {
-            var method = original.Item2.GetMethod("Equals", new Type[] { original.Item2 }, null);
+            var method = original.Item2.GetMethod("Equals", new[] {original.Item2}, null);
 
-            var res = (bool)method.Invoke(original.Item1, new object[] { clone });
-
+            var res = (bool) method.Invoke(original.Item1, new object[] {clone});
 
 
             Assert.AreEqual(res, expect);
@@ -94,27 +92,15 @@ namespace FastClone.Tests
         }
 
         [Test]
-        public void DoesClone_WeaveImmutableProperties()
-        {
-            DoesClone(TypeManifest.PartialWeave);            
-        }
-
-        [Test]
-        public void DoesClone_WeaveMissingCtor()
-        {
-            DoesClone(TypeManifest.LacksParameterlessCtor);
-        }
-
-        [Test]
-        public void DoesNotClone_WeaveMissingInterface()
-        {
-            EnsureThrowsException(TypeManifest.MissingInterface);
-        }
-
-        [Test]
         public void DoesClone_InternalCtor()
         {
             DoesClone(TypeManifest.InternalCtor);
+        }
+
+        [Test]
+        public void DoesClone_InternalProperties()
+        {
+            DoesClone(TypeManifest.InternalProperties);
         }
 
         [Test]
@@ -130,9 +116,21 @@ namespace FastClone.Tests
         }
 
         [Test]
-        public void DoesClone_InternalProperties()
+        public void DoesClone_WeaveImmutableProperties()
         {
-            DoesClone(TypeManifest.InternalProperties);
+            DoesClone(TypeManifest.PartialWeave);
+        }
+
+        [Test]
+        public void DoesClone_WeaveMissingCtor()
+        {
+            DoesClone(TypeManifest.LacksParameterlessCtor);
+        }
+
+        [Test]
+        public void DoesNotClone_WeaveMissingInterface()
+        {
+            EnsureThrowsException(TypeManifest.MissingInterface);
         }
     }
 }

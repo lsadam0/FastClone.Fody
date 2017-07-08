@@ -4,20 +4,6 @@ namespace AssemblyToProcess
 {
     public class InternalProperties : IFastClone<InternalProperties>, IEquatable<InternalProperties>
     {
-        public InternalProperties()
-        {
-
-        }
-
-        public static InternalProperties BuildTestEntity()
-        {
-            return new InternalProperties()
-            {
-                A = 100,
-                B = 200
-            };
-
-        }
         public int A { get; set; }
 
         internal int B { get; set; }
@@ -32,6 +18,15 @@ namespace AssemblyToProcess
         public InternalProperties FastClone()
         {
             throw new NotImplementedException();
+        }
+
+        public static InternalProperties BuildTestEntity()
+        {
+            return new InternalProperties
+            {
+                A = 100,
+                B = 200
+            };
         }
 
         public override bool Equals(object obj)

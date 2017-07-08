@@ -6,16 +6,6 @@ namespace AssemblyToProcess
     {
         public int A { get; set; }
 
-
-        public static MissingInterface BuildTestEntity()
-        {
-            return new MissingInterface()
-            {
-                A = 200
-            };
-
-        }
-
         public bool Equals(MissingInterface other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -23,11 +13,20 @@ namespace AssemblyToProcess
             return A == other.A;
         }
 
+
+        public static MissingInterface BuildTestEntity()
+        {
+            return new MissingInterface
+            {
+                A = 200
+            };
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((MissingInterface) obj);
         }
 

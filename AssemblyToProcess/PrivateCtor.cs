@@ -8,14 +8,7 @@ namespace AssemblyToProcess
         {
         }
 
-        public static PrivateCtor BuildTestEntity()
-        {
-            return new PrivateCtor()
-            {
-                A = 200
-            };
-
-        }
+        public int A { get; set; }
 
         public bool Equals(PrivateCtor other)
         {
@@ -24,11 +17,24 @@ namespace AssemblyToProcess
             return A == other.A;
         }
 
+        public PrivateCtor FastClone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static PrivateCtor BuildTestEntity()
+        {
+            return new PrivateCtor
+            {
+                A = 200
+            };
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((PrivateCtor) obj);
         }
 
@@ -45,13 +51,6 @@ namespace AssemblyToProcess
         public static bool operator !=(PrivateCtor left, PrivateCtor right)
         {
             return !Equals(left, right);
-        }
-
-        public int A { get; set; }
-
-        public PrivateCtor FastClone()
-        {
-            throw new NotImplementedException();
         }
     }
 }

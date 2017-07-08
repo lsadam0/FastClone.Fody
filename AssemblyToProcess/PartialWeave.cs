@@ -22,11 +22,10 @@ namespace AssemblyToProcess
 
         public static PartialWeave BuildTestEntity()
         {
-            return new PartialWeave()
+            return new PartialWeave
             {
-                CanWeave = 100,
+                CanWeave = 100
             };
-
         }
 
         public override bool Equals(object obj)

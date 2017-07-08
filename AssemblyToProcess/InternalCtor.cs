@@ -10,15 +10,6 @@ namespace AssemblyToProcess
 
         public int A { get; set; }
 
-        public static InternalCtor BuildTestEntity()
-        {
-            return new InternalCtor()
-            {
-                A = 100
-            };
-            
-        }
-
         public bool Equals(InternalCtor other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -29,6 +20,14 @@ namespace AssemblyToProcess
         public InternalCtor FastClone()
         {
             throw new NotImplementedException();
+        }
+
+        public static InternalCtor BuildTestEntity()
+        {
+            return new InternalCtor
+            {
+                A = 100
+            };
         }
 
         public override bool Equals(object obj)

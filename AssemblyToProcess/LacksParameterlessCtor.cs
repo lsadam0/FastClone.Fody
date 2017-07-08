@@ -13,11 +13,16 @@ namespace AssemblyToProcess
             return A == other.A;
         }
 
+        public LacksParameterlessCtor FastClone()
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((LacksParameterlessCtor) obj);
         }
 
@@ -38,16 +43,10 @@ namespace AssemblyToProcess
 
         public static LacksParameterlessCtor BuildTestEntity()
         {
-            return new LacksParameterlessCtor()
+            return new LacksParameterlessCtor
             {
                 A = 200
             };
-
-        }
-
-        public LacksParameterlessCtor FastClone()
-        {
-            throw new NotImplementedException();
         }
     }
 }

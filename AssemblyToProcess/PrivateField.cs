@@ -6,21 +6,6 @@ namespace AssemblyToProcess
     {
         private int _hidden;
 
-        public PrivateField()
-        {
-            
-        }
-
-        public static PrivateField BuildTestEntity()
-        {
-            return new PrivateField()
-            {
-                A = 100,
-                _hidden= 200
-
-            };
-
-        }
         public int A { get; set; }
 
         public bool Equals(PrivateField other)
@@ -33,6 +18,15 @@ namespace AssemblyToProcess
         public PrivateField FastClone()
         {
             throw new NotImplementedException();
+        }
+
+        public static PrivateField BuildTestEntity()
+        {
+            return new PrivateField
+            {
+                A = 100,
+                _hidden = 200
+            };
         }
 
         public override bool Equals(object obj)

@@ -24,7 +24,5 @@
         public const string InternalProperties = @"InternalProperties";
 
         public const string PrivateField = @"PrivateField";
-
-        
     }
 }
