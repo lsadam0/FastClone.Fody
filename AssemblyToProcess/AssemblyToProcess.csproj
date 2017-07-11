@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicTest.cs" />
+    <Compile Include="ConstAndReadonly.cs" />
     <Compile Include="IFastClone.cs" />
     <Compile Include="InternalCtor.cs" />
     <Compile Include="InternalProperties.cs" />

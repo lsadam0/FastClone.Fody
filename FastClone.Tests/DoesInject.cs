@@ -132,5 +132,11 @@ namespace FastClone.Tests
         {
             EnsureThrowsException(TypeManifest.MissingInterface);
         }
+
+        [Test]
+        public void ConstAndReadOnly_Does()
+        {
+            DoesClone(TypeManifest.ConstAndReadOnly);
+        }
     }
 }

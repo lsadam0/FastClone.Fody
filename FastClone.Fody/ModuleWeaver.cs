@@ -24,15 +24,9 @@ namespace FastClone.Fody
         private static void BuildInstanceMethod(TypeDefinition def, MethodDefinition mDef)
         {
             var method = def.Methods.FirstOrDefault(x => x.Name == InstanceCloneMethodName);
-            /*
-            var method = new MethodDefinition(
-                InstanceCloneMethodName,
-                MethodAttributes.Public,
-                def);*/
 
             var proc = method.Body.GetILProcessor();
             var existing = proc.Body.Instructions.ToList();
-            // proc.Body.Instructions.Clear();
 
             foreach (var pending in existing)
                 proc.Remove(pending);
@@ -41,7 +35,6 @@ namespace FastClone.Fody
             proc.Emit(OpCodes.Call, mDef);
             proc.Emit(OpCodes.Ret);
 
-            // def.Methods.Add(method);
         }
 
         private MethodDefinition BuildStaticCloneMethod(TypeDefinition target)
@@ -62,7 +55,6 @@ namespace FastClone.Fody
 
             processor.Emit(OpCodes.Newobj, constructor); // invoke constructor
             SetFields(processor, target);
-            // SetProperties(processor, target); // Set Fields
             processor.Emit(OpCodes.Ret); // Return
 
             target.Methods.Add(method);
@@ -74,38 +66,17 @@ namespace FastClone.Fody
         {
             foreach (var field in def.Fields)
             {
+                if (field.HasConstant || field.IsInitOnly || field.IsStatic)
+                    continue;
+
                 processor.Emit(OpCodes.Dup);
                 processor.Emit(OpCodes.Ldarg_0);
                 processor.Emit(OpCodes.Ldfld, field);
                 processor.Emit(OpCodes.Stfld, field);
 
-
-                /*    IL_0005: dup          
-    IL_0006: ldarg.0      // source
-    IL_0007: ldfld        int32 AssemblyToProcess.BasicTest::ValueE
-    IL_000c: stfld        int32 AssemblyToProcess.BasicTest::ValueE*/
-
-                // processor.Emit(OpCodes.g, prop.GetMethod);
-                //  processor.Emit(OpCodes.Callvirt, prop.SetMethod);
-
-                /*                generator.Emit(OpCodes.Ldloc_0);
-                generator.Emit(OpCodes.Ldarg_0);
-                generator.Emit(OpCodes.Ldfld, field);
-                generator.Emit(OpCodes.Stfld, field);*/
             }
         }
-        /*
-        private static void SetProperties(ILProcessor processor, TypeDefinition def)
-        {
-            foreach (var prop in def.Properties)
-            {
-                processor.Emit(OpCodes.Dup);
-                processor.Emit(OpCodes.Ldarg_0);
-                processor.Emit(OpCodes.Callvirt, prop.GetMethod);
-                processor.Emit(OpCodes.Callvirt, prop.SetMethod);
-            }
-        }*/
-
+        
         private static bool ImplementsIFastClone(TypeDefinition def)
         {
             return def
