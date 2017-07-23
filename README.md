@@ -1,4 +1,4 @@
-[![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/FastClone.Fody/)
+[![NuGet](https://img.shields.io/nuget/v/FastClone.Fody.svg)](https://www.nuget.org/packages/FastClone.Fody/)
 
 ## This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
