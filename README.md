@@ -1,4 +1,4 @@
-[![NuGet](https://img.shields.io/nuget/v/FastClone.Fody.svg)](https://www.nuget.org/packages/FastClone.Fody/)
+[![NuGet](https://img.shields.io/nuget/v/FastClone.Fody.svg)](https://www.nuget.org/packages/FastClone.Fody/) [![Build status](https://ci.appveyor.com/api/projects/status/xbw6hp58nhg71tvl?svg=true)](https://ci.appveyor.com/project/lsadam0/fastclone-fody)
 
 ## This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
